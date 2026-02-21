@@ -215,7 +215,7 @@ go test -cover
 
 - **Sistema:** WSL2 (Ubuntu)
 - **Go:** 1.25.7
-- **CPU:** [seu processador]
+- **CPU:** CORE i7 10th gen
 - **Rede:** localhost (zero latency)
 
 ### Cenário 1: Payload Simples
