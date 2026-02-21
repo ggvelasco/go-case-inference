@@ -74,7 +74,7 @@ digraph Policy {
 ```bash
 # Clone o repositório
 git clone
-cd go-case-itau
+cd go-case-inference
 
 # Instale as dependências
 go mod download
