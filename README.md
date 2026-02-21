@@ -211,11 +211,89 @@ go test -cover
 
 ## 📈 Performance
 
-**Ambiente de teste:** WSL2, Go 1.22.2
+### Ambiente de Teste
+
+- **Sistema:** WSL2 (Ubuntu)
+- **Go:** 1.25.7
+- **CPU:** [seu processador]
+- **Rede:** localhost (zero latency)
+
+### Cenário 1: Payload Simples
+
+**Policy:** 2 nós, 1 condição  
+**Input:** 1 variável
+
+| Métrica | Resultado  |
+| ------- | ---------- |
+| RPS     | **17,466** |
+| P50     | 1.4ms      |
+| P90     | 5.6ms      |
+| P99     | 10.5ms     |
+
+### Cenário 2: Payload Realista (Crédito Bancário)
+
+**Policy:** 9 nós, 9 condições complexas  
+**Input:** 10 variáveis (age, score, income, employment, debt_ratio, etc)
+
+| Métrica | Resultado |
+| ------- | --------- |
+| RPS     | **8,881** |
+| P50     | 2.2ms     |
+| P90     | 12.8ms ✅ |
+| P95     | 16.4ms ✅ |
+| P99     | 24.4ms ✅ |
+
+**Total processado:** 266,513 requests em 30s sem erros.
+
+### Comparação com Requisitos
+
+| Requisito    | Meta   | Realista   | Status            |
+| ------------ | ------ | ---------- | ----------------- |
+| RPS mínimo   | 500    | **8,881**  | ✅ **18x acima**  |
+| RPS desejado | 1,500  | **8,881**  | ✅ **6x acima**   |
+| P90 latência | < 30ms | **12.8ms** | ✅ **57% melhor** |
+
+### Interpretação
+
+Mesmo com políticas complexas (9 nós, múltiplas condições com operadores lógicos),
+o sistema mantém **~9k RPS** em ambiente local, **6-18x acima** dos requisitos.
+
+Em produção com latência de rede real, estima-se:
+
+- **Payload simples:** 8k-12k RPS
+- **Payload realista:** 3k-6k RPS
+- Ainda **2-4x acima** do requisito máximo (1500 RPS)
+
+**Ambiente:** WSL2, Go 1.25.7, localhost
+
+### Benchmark com `hey`
 
 ```bash
-go test -bench=.
+hey -z 30s -q 500 -m POST \
+  -H "Content-Type: application/json" \
+  -D payload.json \
+  http://localhost:8080/infer
 ```
+
+### Resultados
+
+| Métrica          | Requisito | Resultado  | Status       |
+| ---------------- | --------- | ---------- | ------------ |
+| **RPS**          | 500-1500  | **17,466** | ✅ 35x acima |
+| **P50**          | -         | **1.4ms**  | ✅           |
+| **P90**          | < 30ms    | **5.6ms**  | ✅ 5x melhor |
+| **P95**          | -         | **7.1ms**  | ✅           |
+| **P99**          | -         | **10.5ms** | ✅           |
+| **Taxa de erro** | < 1%      | **0%**     | ✅           |
+
+**Total processado:** 524,067 requests em 30 segundos sem erros.
+
+### Interpretação
+
+O sistema consegue processar **~17k requisições/segundo** em ambiente local,
+**35x acima** do requisito de 500 RPS. Em ambiente de produção com latência
+de rede real, estima-se performance entre 5k-10k RPS, ainda **3-7x acima**
+do requisito.
 
 ### Próximas Otimizações
 

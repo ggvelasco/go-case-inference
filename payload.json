@@ -1,0 +1,15 @@
+{
+  "policy_dot": "digraph CreditPolicy { start [result=\"\"]; prime_approved [result=\"approved=true,segment=prime,credit_limit=50000,interest_rate=1.99,cashback=3.0\"]; gold_approved [result=\"approved=true,segment=gold,credit_limit=30000,interest_rate=2.99,cashback=2.0\"]; standard_approved [result=\"approved=true,segment=standard,credit_limit=15000,interest_rate=4.99,cashback=1.0\"]; manual_review [result=\"approved=false,status=manual_review,review_reason=borderline_score\"]; high_risk [result=\"approved=false,status=rejected,rejection_reason=high_risk_profile\"]; fraud_check [result=\"approved=false,status=fraud_check,alert_level=high\"]; income_verification [result=\"approved=false,status=pending,pending_reason=income_verification_needed\"]; denied_age [result=\"approved=false,status=rejected,rejection_reason=age_requirement_not_met\"]; denied_score [result=\"approved=false,status=rejected,rejection_reason=credit_score_too_low\"]; start -> prime_approved [cond=\"age>=25 && age<=65 && score>=750 && income>=10000 && employment_years>=5 && debt_ratio<0.3 && has_checking==true && has_savings==true\"]; start -> gold_approved [cond=\"age>=21 && age<=70 && score>=700 && score<750 && income>=7000 && employment_years>=3 && debt_ratio<0.4 && (has_checking==true || has_savings==true)\"]; start -> standard_approved [cond=\"age>=18 && age<=75 && score>=650 && score<700 && income>=5000 && employment_years>=2 && debt_ratio<0.5\"]; start -> manual_review [cond=\"age>=18 && score>=600 && score<650 && income>=3000 && debt_ratio<0.6\"]; start -> income_verification [cond=\"age>=18 && score>=650 && income<5000\"]; start -> high_risk [cond=\"age>=18 && score>=500 && score<600 && (debt_ratio>=0.6 || employment_years<1)\"]; start -> fraud_check [cond=\"age>=18 && (recent_address_changes>3 || recent_credit_inquiries>5 || bankruptcy_history==true)\"]; start -> denied_age [cond=\"age<18 || age>80\"]; start -> denied_score [cond=\"score<500\"]; }",
+  "input": {
+    "age": 32,
+    "score": 780,
+    "income": 12000,
+    "employment_years": 8,
+    "debt_ratio": 0.25,
+    "has_checking": true,
+    "has_savings": true,
+    "recent_address_changes": 1,
+    "recent_credit_inquiries": 2,
+    "bankruptcy_history": false
+  }
+}
