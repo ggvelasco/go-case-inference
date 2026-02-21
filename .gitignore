@@ -1,0 +1,23 @@
+
+# Binários
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Arquivos de teste
+*.test
+*.out
+
+# Binário do projeto
+itau-inference
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Go
+go.work
